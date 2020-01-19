@@ -20,18 +20,26 @@ public class ScreenLogger {
     private String prompt;
     private BufferedReader console;
 
-    public ScreenLogger(int cmdLine, String prompt) {
+    ScreenLogger(int cmdLine, String prompt) {
         this.cmdLine = cmdLine;
         this.prompt = prompt;
         this.console = new BufferedReader(new InputStreamReader(System.in));
     }
 
-    private void writePrompt() {
-        writeLine(cmdLine, prompt+" ");
+    private void output(int position, String text) {
+        System.out.printf(CSI+"%dH"+CSI+"2K"+text,position);
     }
 
-    public void writeLine(int position, String text) {
-        System.out.printf(CSI+"%dH"+CSI+"2K"+text,position);
+    private void writePrompt() {
+        output(cmdLine, prompt+" ");
+    }
+
+    void clearScreen() {
+        System.out.print(CSI+"2J");
+    }
+
+    void writeLine(int position, String text) {
+        output(position, text);
         writePrompt();
     }
 

@@ -6,14 +6,15 @@ import org.slf4j.LoggerFactory;
 /**
  * Fork
  */
-public class Fork {
+class Fork {
 
     private static final Logger logger = LoggerFactory.getLogger(Fork.class);
 
+    // owner must be volatile so that any subsequent pickUp sees that the fork is being used
     private final int id;
-    private volatile String owner;
+    private volatile Philosopher owner;
 
-    public Fork(int id) {
+    Fork(int id) {
         this.id = id;
         this.owner = null;
     }
@@ -22,9 +23,10 @@ public class Fork {
         return id;
     }
 
-    synchronized void pickUp(String requester) throws InterruptedException {
+    synchronized void pickUp(Philosopher requester) throws InterruptedException {
         while(owner != null && !owner.equals(requester)) {
             try {
+                Main.screen.writeLine(requester.getId()+1, String.format("%s is waiting for fork %d",requester.getName(), id));
                 wait();
             } catch (InterruptedException e) {
                 if(Main.stopAll) {
@@ -32,12 +34,14 @@ public class Fork {
                 }
             }
         }
-        logger.debug("{} picks up fork {}",requester, id);
+        Main.screen.writeLine(requester.getId()+1, String.format("%s picks up fork %d",requester.getName(), id));
+        logger.debug("{} picks up fork {}",requester.getName(), id);
         owner = requester;
     }
 
     synchronized void putDown() {
-        logger.debug("{} puts down fork {}",owner, id);
+        Main.screen.writeLine(owner.getId()+1, String.format("%s puts down fork %d",owner.getName(), id));
+        logger.debug("{} puts down fork {}",owner.getName(), id);
         owner = null;
         notifyAll();
     }
