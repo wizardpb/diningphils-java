@@ -12,20 +12,20 @@ import java.util.stream.Stream;
  */
 public class Main {
 
-    public final static int THINK_LOW_SECS = 1;
-    public final static int THINK_HIGH_SECS = 10;
-    public final static int EAT_LOW_SECS = 1;
-    public final static int EAT_HIGH_SECS = 10;
+    private final static int THINK_LOW_SECS = 1;
+    private final static int THINK_HIGH_SECS = 10;
+    private final static int EAT_LOW_SECS = 1;
+    private final static int EAT_HIGH_SECS = 10;
 
-    public final static String [] PHILOSOPHERS = { "Kant", "Marx", "Decartes", "Hegel", "Heideggar"};
-    public final static int N_PHILS = PHILOSOPHERS.length;
+    private final static String [] PHILOSOPHERS = { "Kant", "Marx", "Decartes", "Hegel", "Heidegger"};
+    private final static int N_PHILS = PHILOSOPHERS.length;
 
     public static class DelayGenerator {
 
         private int think_low, think_high, eat_low, eat_high;
         private Random gen;
 
-        public DelayGenerator(int think_low, int think_high, int eat_low, int eat_high) {
+        DelayGenerator(int think_low, int think_high, int eat_low, int eat_high) {
             this.gen = new Random();
             this.think_low = think_low;
             this.think_high = think_high;
@@ -33,28 +33,28 @@ public class Main {
             this.eat_high = eat_high;
         }
 
-        public DelayGenerator() {
+        DelayGenerator() {
             this(THINK_LOW_SECS,THINK_HIGH_SECS, EAT_LOW_SECS, EAT_HIGH_SECS);
         }
 
-        public int getThinkTime() {
+        int getThinkTime() {
             return gen.nextInt(think_high - think_low) + think_low;
         }
 
-        public int getEatTime() {
+        int getEatTime() {
             return gen.nextInt(eat_high - eat_low) + eat_low;
         }
     }
 
-    public static boolean stopAll = false;
+    static boolean stopAll = false;
 
     private static DelayGenerator delays = new DelayGenerator();
 
-    public static int getThinkTime() {
+    static int getThinkTime() {
         return delays.getThinkTime();
     }
 
-    public static int getEatTime() {
+    static int getEatTime() {
         return delays.getEatTime();
     }
 
